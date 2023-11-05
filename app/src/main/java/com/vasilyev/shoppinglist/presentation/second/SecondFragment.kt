@@ -18,7 +18,9 @@ class SecondFragment : Fragment() {
     private lateinit var onEditingFinishedListener: OnEditingFinishedListener
     private var screenMode: String = UNDEFINED_MODE
     private var shopItemId: Int = UNDEFINED_ID
-    private val viewModel: SecondViewModel by viewModels()
+    private val viewModel: SecondViewModel by viewModels(){
+        SecondViewModelFactory(requireActivity().application)
+    }
     private val binding: SecondFragmentBinding by lazy{
         SecondFragmentBinding.inflate(layoutInflater)
     }

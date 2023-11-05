@@ -14,7 +14,9 @@ import com.vasilyev.shoppinglist.presentation.adapters.ShopListAdapter
 import com.vasilyev.shoppinglist.presentation.second.SecondActivity
 
 class MainActivity : AppCompatActivity(), SecondFragment.OnEditingFinishedListener {
-    private val viewModel: MainViewModel by viewModels()
+    private val viewModel: MainViewModel by viewModels(){
+        MainViewModelFactory(application)
+    }
     private val binding: ActivityMainBinding by lazy {
         ActivityMainBinding.inflate(layoutInflater)
     }

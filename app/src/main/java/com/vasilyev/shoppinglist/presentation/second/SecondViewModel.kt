@@ -1,18 +1,21 @@
 package com.vasilyev.shoppinglist.presentation.second
 
-import ShopListRepositoryImpl
+import android.app.Application
+import com.vasilyev.shoppinglist.data.ShopListRepositoryImpl
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.vasilyev.shoppinglist.domain.AddShopItemUseCase
 import com.vasilyev.shoppinglist.domain.EditShopItemUseCase
 import com.vasilyev.shoppinglist.domain.GetShopItemUseCase
 import com.vasilyev.shoppinglist.domain.ShopItem
 import com.vasilyev.shoppinglist.domain.ShopListRepository
+import kotlinx.coroutines.launch
 import java.lang.NumberFormatException
 
-class SecondViewModel: ViewModel() {
-    private val repository: ShopListRepository = ShopListRepositoryImpl
+class SecondViewModel(application: Application): ViewModel() {
+    private val repository: ShopListRepository = ShopListRepositoryImpl(application)
 
     private val getShopItemUseCase = GetShopItemUseCase(repository)
     private val editShopItemUseCase = EditShopItemUseCase(repository)
@@ -43,14 +46,19 @@ class SecondViewModel: ViewModel() {
                 count = parseInputCount(count),
                 enabled = true
             )
-            addShopItemUseCase.addShopItem(item)
+            viewModelScope.launch {
+                addShopItemUseCase.addShopItem(item)
+            }
+
             closeScreen()
         }
     }
 
     fun getShopItem(id: Int){
-        val item = getShopItemUseCase.getShopItem(id)
-        _shopItem.value = item
+        viewModelScope.launch {
+            val item = getShopItemUseCase.getShopItem(id)
+            _shopItem.value = item
+        }
     }
 
     fun editShopItem(name: String?, count: String?){
@@ -61,7 +69,11 @@ class SecondViewModel: ViewModel() {
                     name = parseInputName(name),
                     count = parseInputCount(count)
                 )
-                editShopItemUseCase.editShopItem(item)
+
+                viewModelScope.launch {
+                    editShopItemUseCase.editShopItem(item)
+                }
+
                 closeScreen()
             }
         }
