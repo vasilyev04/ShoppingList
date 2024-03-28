@@ -1,7 +1,6 @@
 package com.vasilyev.shoppinglist.presentation.second
 
-import android.app.Application
-import com.vasilyev.shoppinglist.data.ShopListRepositoryImpl
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -10,16 +9,19 @@ import com.vasilyev.shoppinglist.domain.AddShopItemUseCase
 import com.vasilyev.shoppinglist.domain.EditShopItemUseCase
 import com.vasilyev.shoppinglist.domain.GetShopItemUseCase
 import com.vasilyev.shoppinglist.domain.ShopItem
-import com.vasilyev.shoppinglist.domain.ShopListRepository
 import kotlinx.coroutines.launch
 import java.lang.NumberFormatException
+import javax.inject.Inject
 
-class SecondViewModel(application: Application): ViewModel() {
-    private val repository: ShopListRepository = ShopListRepositoryImpl(application)
+class SecondViewModel @Inject constructor(
+    private val addShopItemUseCase: AddShopItemUseCase,
+    private val getShopItemUseCase: GetShopItemUseCase,
+    private val editShopItemUseCase: EditShopItemUseCase
+): ViewModel() {
 
-    private val getShopItemUseCase = GetShopItemUseCase(repository)
-    private val editShopItemUseCase = EditShopItemUseCase(repository)
-    private val addShopItemUseCase = AddShopItemUseCase(repository)
+    init {
+        Log.d("viewModelTest", "$this")
+    }
 
     private val _errorName: MutableLiveData<Boolean> = MutableLiveData()
     val errorName: LiveData<Boolean>
@@ -108,7 +110,6 @@ class SecondViewModel(application: Application): ViewModel() {
 
         return validated
     }
-
 
     private fun closeScreen(){
         _shouldCloseScreen.value = Unit

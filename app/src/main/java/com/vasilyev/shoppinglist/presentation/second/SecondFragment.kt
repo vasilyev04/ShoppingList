@@ -13,19 +13,33 @@ import androidx.fragment.app.viewModels
 import com.vasilyev.shoppinglist.databinding.SecondFragmentBinding
 import com.vasilyev.shoppinglist.domain.ShopItem
 import com.vasilyev.shoppinglist.domain.ShopItem.Companion.UNDEFINED_ID
+import com.vasilyev.shoppinglist.presentation.App
+import com.vasilyev.shoppinglist.presentation.ViewModelFactory
+import javax.inject.Inject
 
 class SecondFragment : Fragment() {
     private lateinit var onEditingFinishedListener: OnEditingFinishedListener
     private var screenMode: String = UNDEFINED_MODE
     private var shopItemId: Int = UNDEFINED_ID
-    private val viewModel: SecondViewModel by viewModels(){
-        SecondViewModelFactory(requireActivity().application)
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
+
+    private val viewModel: SecondViewModel by viewModels{
+        viewModelFactory
     }
+
     private val binding: SecondFragmentBinding by lazy{
         SecondFragmentBinding.inflate(layoutInflater)
     }
 
+    private val component by lazy{
+        (requireActivity().application as App).component
+    }
+
     override fun onAttach(context: Context) {
+        component.inject(this)
+
         super.onAttach(context)
         if (context is OnEditingFinishedListener){
             onEditingFinishedListener = context

@@ -10,13 +10,21 @@ import androidx.recyclerview.widget.RecyclerView
 import com.vasilyev.shoppinglist.presentation.second.SecondFragment
 import com.vasilyev.shoppinglist.R
 import com.vasilyev.shoppinglist.databinding.ActivityMainBinding
+import com.vasilyev.shoppinglist.presentation.App
+import com.vasilyev.shoppinglist.presentation.ViewModelFactory
 import com.vasilyev.shoppinglist.presentation.adapters.ShopListAdapter
 import com.vasilyev.shoppinglist.presentation.second.SecondActivity
+import javax.inject.Inject
 
 class MainActivity : AppCompatActivity(), SecondFragment.OnEditingFinishedListener {
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
+
     private val viewModel: MainViewModel by viewModels(){
-        MainViewModelFactory(application)
+        viewModelFactory
     }
+
     private val binding: ActivityMainBinding by lazy {
         ActivityMainBinding.inflate(layoutInflater)
     }
@@ -25,6 +33,9 @@ class MainActivity : AppCompatActivity(), SecondFragment.OnEditingFinishedListen
         ShopListAdapter()
     }
 
+    private val component by lazy {
+        (application as App).component
+    }
 
     private fun isLandScapeOrientation(): Boolean{
         binding.fragmentContainerView?.let {
@@ -44,6 +55,8 @@ class MainActivity : AppCompatActivity(), SecondFragment.OnEditingFinishedListen
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        component.inject(this)
+
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         //setOrientation()

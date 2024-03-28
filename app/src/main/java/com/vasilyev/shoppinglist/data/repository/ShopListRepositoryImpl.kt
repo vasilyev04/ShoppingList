@@ -1,19 +1,17 @@
-package com.vasilyev.shoppinglist.data
+package com.vasilyev.shoppinglist.data.repository
 
-import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.map
 import com.vasilyev.shoppinglist.data.local.LocalDataSource
-import com.vasilyev.shoppinglist.data.local.room.AppDatabase
-import com.vasilyev.shoppinglist.data.local.room.ShopListMapper
+import com.vasilyev.shoppinglist.data.mapper.ShopListMapper
 import com.vasilyev.shoppinglist.domain.ShopItem
 import com.vasilyev.shoppinglist.domain.ShopListRepository
-import kotlin.random.Random
+import javax.inject.Inject
 
-class ShopListRepositoryImpl(application: Application): ShopListRepository {
-    private val localDataSource = LocalDataSource(AppDatabase.getInstance(application))
-    private val mapper = ShopListMapper()
-
+class ShopListRepositoryImpl @Inject constructor(
+    private val localDataSource: LocalDataSource,
+    private val mapper: ShopListMapper
+): ShopListRepository {
     /*init {
         for (i in 0..1){
             addShopItem(ShopItem(
@@ -26,25 +24,25 @@ class ShopListRepositoryImpl(application: Application): ShopListRepository {
     }*/
 
     override suspend fun addShopItem(shopItem: ShopItem) {
-        val shopItemEntity = mapper.mapModelToEntity(shopItem)
+        val shopItemEntity = mapper.mapEntityToDbModel(shopItem)
         localDataSource.addShopItem(shopItemEntity)
     }
 
     override suspend fun editShopItem(shopItem: ShopItem) {
-        val shopItemEntity = mapper.mapModelToEntity(shopItem)
+        val shopItemEntity = mapper.mapEntityToDbModel(shopItem)
         localDataSource.addShopItem(shopItemEntity)
     }
 
     override suspend fun getShopItem(id: Int): ShopItem {
         val shopItemEntity = localDataSource.getShopItem(id)
-        return mapper.mapEntityToModel(shopItemEntity)
+        return mapper.mapDbModelToEntity(shopItemEntity)
     }
 
     override fun getShopList(): LiveData<List<ShopItem>> {
         val shopItemsEntityList = localDataSource.getShopItemsList()
 
         return shopItemsEntityList.map { list ->
-            mapper.mapListEntityToListModel(list)
+            mapper.mapListDbModelToEntity(list)
         }
     }
 

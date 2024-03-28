@@ -26,15 +26,19 @@ class SecondActivity : AppCompatActivity(), SecondFragment.OnEditingFinishedList
         private const val UNDEFINED_MODE = "undefined_mode"
 
         fun newIntentAddItem(context: Context): Intent{
-            val intent = Intent(context, SecondActivity::class.java)
-            intent.putExtra(EXTRA_SCREEN_MODE, MODE_ADD)
+            val intent = Intent(context, SecondActivity::class.java).apply {
+                putExtra(EXTRA_SCREEN_MODE, MODE_ADD)
+            }
+
             return intent
         }
 
         fun newIntentEditItem(context: Context, id: Int): Intent{
-            val intent = Intent(context, SecondActivity::class.java)
-            intent.putExtra(EXTRA_SCREEN_MODE, MODE_EDIT)
-            intent.putExtra(EXTRA_SHOP_ITEM_ID, id)
+            val intent = Intent(context, SecondActivity::class.java).apply {
+                putExtra(EXTRA_SCREEN_MODE, MODE_EDIT)
+                putExtra(EXTRA_SHOP_ITEM_ID, id)
+            }
+
             return intent
         }
     }

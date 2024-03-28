@@ -1,8 +1,7 @@
 package com.vasilyev.shoppinglist.presentation.main
 
 
-import android.app.Application
-import com.vasilyev.shoppinglist.data.ShopListRepositoryImpl
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -11,18 +10,19 @@ import com.vasilyev.shoppinglist.domain.DeleteShopItemUseCase
 import com.vasilyev.shoppinglist.domain.EditShopItemUseCase
 import com.vasilyev.shoppinglist.domain.GetShopListUseCase
 import com.vasilyev.shoppinglist.domain.ShopItem
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class MainViewModel(application: Application): ViewModel() {
-    private val shopListRepository = ShopListRepositoryImpl(application)
+class MainViewModel @Inject constructor(
+    getShopListUseCase: GetShopListUseCase,
+    private val addShopItemUseCase: AddShopItemUseCase,
+    private val editShopItemUseCase: EditShopItemUseCase,
+    private val deleteShopItemUseCase: DeleteShopItemUseCase
+): ViewModel() {
 
-    private val getShopListUseCase = GetShopListUseCase(shopListRepository)
-    private val addShopItemUseCase = AddShopItemUseCase(shopListRepository)
-    private val editShopItemUseCase = EditShopItemUseCase(shopListRepository)
-    private val deleteShopItemUseCase = DeleteShopItemUseCase(shopListRepository)
+    init {
+        Log.d("viewModelTest", "$this")
+    }
 
     val list: LiveData<List<ShopItem>> = getShopListUseCase.getShopList()
 

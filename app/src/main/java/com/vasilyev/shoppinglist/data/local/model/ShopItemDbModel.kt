@@ -1,11 +1,10 @@
-package com.vasilyev.shoppinglist.data.local.room
+package com.vasilyev.shoppinglist.data.local.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.vasilyev.shoppinglist.domain.ShopItem
 
 @Entity(tableName = "shop_items")
-data class ShopItemEntity(
+data class ShopItemDbModel(
     @PrimaryKey(autoGenerate = true)
     val id: Int,
     val name: String,

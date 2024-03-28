@@ -6,12 +6,12 @@
     android:layout_height="match_parent"
     tools:context=".presentation.main.MainActivity">
 
-
     <ScrollView
         android:visibility="gone"
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <LinearLayout
             android:id="@+id/ll_shop_list"
             android:layout_width="match_parent"
